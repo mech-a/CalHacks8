@@ -1,4 +1,4 @@
 python-dotenv
 fastapi[all]
 jsons
-coloredlogs
+googlemaps

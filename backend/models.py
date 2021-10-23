@@ -7,6 +7,7 @@ from pathlib import Path
 import logging
 from typing import Optional, List, Dict
 from pydantic import BaseModel
+import jsons
 
 # subsumed by pydantic BaseModel
 # from dataclasses import dataclass
@@ -29,22 +30,31 @@ init_paths()
 
 class User(BaseModel):
     """User class"""
-    name: str
-    id: Optional[int] = None
+    id: int = -1
 
     @staticmethod
     def read_from(id: int) -> User:
-        pass
+        return User.from_local(id)
 
     @staticmethod
     def from_local(id: int) -> User:
-        pass
+        local_path = LOCAL_OBJECT_PATH / str(id)
+        if local_path.exists():
+            with open(local_path, 'r') as fp:
+                user = User.parse_file(fp)
+                return user
+        raise Exception('no matching Instance found')
 
     def write(self):
-        pass
+        return self.write_local()
 
     def write_local(self) -> Path:
-        pass
+        local_path = LOCAL_OBJECT_PATH / str(self.id)
+        if local_path.exists():
+            logging.info(f'Path {str(local_path)} already exists for User {str(self)}, overwriting')
+        with open(local_path, 'w') as fp:
+            fp.write(self.json())
+        return local_path
 
     
 class Location(BaseModel):
@@ -56,3 +66,4 @@ class WalkRequest(BaseModel):
     from_loc: Location
     to_loc: Location
     time: int # placeholder
+

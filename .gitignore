@@ -76,3 +76,7 @@ typings/
 .fusebox/
 
 Front_End/.expo/
+
+Front_End/.expo/packager-info.json
+
+Front_End/package-lock.json

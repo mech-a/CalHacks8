@@ -8,20 +8,26 @@ import {
   Button,
 } from "react-native";
 
-function SplashScreen({ navigation }) {
+function GotHomeSafe({ navigation }) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
         style={{ width: "100%", height: "100%", position: "absolute" }}
-        source={require("../assets/LandingPage.png")}
+        source={require("../assets/EndMessage.png")}
       />
       <Button
-        style={{ top: 200, position: "absolute" }}
-        title="GO"
+        style={{ position: "absolute", bottom: 500, left: 200}}
+        title="YES"
         color="#FFFFFF"
         onPress={() => navigation.navigate("Map")}
       />
-    </View>
+      <Button
+        style={{ position: "absolute", bottom: 500, right: 200}}
+        title="NO"
+        color="#FFFFFF"
+        onPress={() => navigation.navigate("Map")}
+      />
+    </SafeAreaView>
   );
 }
 
@@ -34,4 +40,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreen;
+export default GotHomeSafe;

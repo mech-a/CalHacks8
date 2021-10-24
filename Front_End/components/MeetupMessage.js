@@ -8,12 +8,12 @@ import {
   Button,
 } from "react-native";
 
-function SplashScreen({ navigation }) {
+function MeetupMessage({ navigation }) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
         style={{ width: "100%", height: "100%", position: "absolute" }}
-        source={require("../assets/LandingPage.png")}
+        source={require("../assets/MatchedMessage.png")}
       />
       <Button
         style={{ top: 200, position: "absolute" }}
@@ -21,7 +21,7 @@ function SplashScreen({ navigation }) {
         color="#FFFFFF"
         onPress={() => navigation.navigate("Map")}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreen;
+export default MeetupMessage;

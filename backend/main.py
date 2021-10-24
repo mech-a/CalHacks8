@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from models import User
+from models import User, TIME_SEGMENTS
 
 app = FastAPI()
 
@@ -24,3 +24,8 @@ async def get_user(user_id: int):
     """Return user data for a user_id"""
     user = User.read_from(user_id)
     return user
+
+@app.get("/time_segments/")
+async def get_time_segments():
+    """Return selectable times"""
+    return TIME_SEGMENTS

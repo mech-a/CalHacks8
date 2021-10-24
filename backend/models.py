@@ -1,11 +1,13 @@
 from __future__ import annotations
+import datetime
+import math
 
 from dotenv import load_dotenv
 load_dotenv()
 
 from pathlib import Path
 import logging
-from typing import Optional, List, Dict
+from typing import Any, Optional, List, Dict
 from pydantic import BaseModel
 import jsons
 
@@ -26,6 +28,8 @@ def init_paths():
 
 init_paths()
 
+TIME_SEGMENTS = [i for i in range(24)]
+
 # ---! !---
 
 class User(BaseModel):
@@ -40,9 +44,9 @@ class User(BaseModel):
     def from_local(id: int) -> User:
         local_path = LOCAL_OBJECT_PATH / str(id)
         if local_path.exists():
-            with open(local_path, 'r') as fp:
-                user = User.parse_file(fp)
-                return user
+            # with open(local_path, 'r') as fp:
+            user = User.parse_file(local_path)
+            return user
         raise Exception('no matching Instance found')
 
     def write(self):
@@ -58,12 +62,26 @@ class User(BaseModel):
 
     
 class Location(BaseModel):
-    # we need to know the navigation api we're using, Location will be represented in that
-    pass
+    name: Optional[str] = None
+    startpt: Optional[bool] = True
+    endpt: Optional[bool] = True
+    lat: Optional[float]
+    lng: Optional[float]
+
+    @staticmethod
+    def dist(a: Location, b: Location):
+        return math.dist([a.lat, a.lng], [b.lat, b.lng])
+
 
 class WalkRequest(BaseModel):
     requester: User
     from_loc: Location
     to_loc: Location
-    time: int # placeholder
+    # placeholder
+    time: Any 
 
+class Queue(BaseModel):
+    queue = {} # times : list of walkrequests
+
+    def insert(r: WalkRequest):
+        pass

@@ -2,3 +2,5 @@ python-dotenv
 fastapi[all]
 jsons
 googlemaps
+numpy
+pandas

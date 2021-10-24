@@ -34,7 +34,7 @@ TIME_SEGMENTS = [i for i in range(24)]
 
 class User(BaseModel):
     """User class"""
-    id: int = -1
+    id: int
 
     @staticmethod
     def read_from(id: int) -> User:
@@ -42,6 +42,7 @@ class User(BaseModel):
 
     @staticmethod
     def from_local(id: int) -> User:
+        # here is an example of deserializing a file. keep all objects in the LOCAL_OBJECT_PATH and then read them as an object. In this case the unique identifying key is the id, hashes also work
         local_path = LOCAL_OBJECT_PATH / str(id)
         if local_path.exists():
             # with open(local_path, 'r') as fp:

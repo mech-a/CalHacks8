@@ -6,6 +6,18 @@ app = FastAPI()
 
 user_count = 0
 
+'''
+TODOS
+Build out the Queue of WalkRequests
+- Make an algorithm to pair WalkRequests together to form a trip
+
+Make a Persistence class (see utils) that will persist all relevant objects
+Persistence.persist(objs: List[BaseModel]) should write all files into unique files in objects/. See example in models.py/User
+Persistence.get(class: BaseModel, key: Any (some identifying component, like an id or name)) should return the relevant object of type class 
+''' 
+
+
+
 @app.get("/")
 async def root():
     return {"message" : "Hello World"}
@@ -29,3 +41,4 @@ async def get_user(user_id: int):
 async def get_time_segments():
     """Return selectable times"""
     return TIME_SEGMENTS
+

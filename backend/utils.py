@@ -27,4 +27,5 @@ def closest_loc(waypoints: List[Location], loc: Location) -> Location:
 
 
 class Persistence:
+    # TODO
     pass

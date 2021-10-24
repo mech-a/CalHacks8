@@ -7,13 +7,15 @@ load_dotenv()
 
 from pathlib import Path
 import logging
-from typing import Any, Optional, List, Dict
+from typing import Any, Optional, List, Dict, OrderedDict
 from pydantic import BaseModel
 import jsons
+import utils
 
 # subsumed by pydantic BaseModel
 # from dataclasses import dataclass
 
+waypoints = [ Location(name="sather", startpt=True, endpt=False, lat=37.8699776, lng=-122.2574080), Location(name="soda", startpt=False, endpt=True, lat=37.87567, lng=-122.25870999999999)]
 
 # ---! basic initialization !---
 LOCAL_OBJECT_PATH = Path('objects/')
@@ -82,7 +84,7 @@ class WalkRequest(BaseModel):
     time: Any 
 
 class Queue(BaseModel):
-    queue = {} # times : list of walkrequests
+    queue = OrderedDict() # times : list of walkrequests
 
     def insert(r: WalkRequest):
         if (Queue.queue.get(r.time) == None):
@@ -90,17 +92,21 @@ class Queue(BaseModel):
         else:
             walkers = Queue.queue.get(r.time)
         walkers.append(r)
-        Queue.queue.update({r.time: walkers})
+        Queue.queue.update({r.time: Queue.aggregate(walkers)})
 
     def delete() -> List(WalkRequest):
         soonest_time = min(Queue.queue.keys) 
         return Queue.queue.pop(soonest_time)
 
-
-    #do we want to group by some range of times? 
-    #or will the time within the walk request be set to a specific set of times so that we don't have to worry about grouping like that?
-    #do we need to take into account users they do not want to be grouped with? How to get this info?
-    #need to take the first group off the queue when their departure time is next
-    #how to take care of arrival vs departure time? Do we have both options or not?
-    #is it better to use an OrderedDict so that the times will already be ordered? 
+    def aggregate(walkers: List(WalkRequest)) -> List(List(WalkRequest)):
+        groups = {} # location tuple : list of walkers
+        for w in walkers:
+            loc = utils.get_route(waypoints, w.from_loc, w.to_loc)
+            w_group = groups.get(loc)
+            if (w_group == None):
+                groups.update({loc, [w]})
+            else:
+                w_group.append(w)
+                groups.update({loc, w_group})
+        return List(groups.values())
 

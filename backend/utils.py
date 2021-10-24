@@ -5,7 +5,10 @@ import numpy as np
 import os
 import googlemaps
 from models import Location
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Any
+from pydantic import BaseModel
+from models import LOCAL_OBJECT_PATH
+import logging
 
 gmaps = googlemaps.Client(key=os.getenv('GMAPS_KEY'))
 
@@ -27,5 +30,30 @@ def closest_loc(waypoints: List[Location], loc: Location) -> Location:
 
 
 class Persistence:
-    # TODO
-    pass
+
+    def persist(objs: List[BaseModel]):
+        for obj in objs:
+            local_path = LOCAL_OBJECT_PATH / str(Persistence.get_key(obj))
+            if local_path.exists():
+                logging.info(f'Path {str(local_path)} already exists for User {str(obj)}, overwriting')
+            with open(local_path, 'w') as fp:
+                fp.write(bytearray(obj))
+                fp.close()
+    
+    def get_key(obj: BaseModel) -> Any:
+        if (hasattr(obj, "id")):
+            return obj.id
+        elif (hasattr(obj, "name")):
+            return obj.name
+        else:
+            return hash(obj)
+
+
+    def get(key: Any) -> BaseModel:
+        local_path = LOCAL_OBJECT_PATH / str(key)
+        if local_path.exists():
+            return Persistence.parse_file(local_path)
+        raise Exception('no matching Instance found')
+
+
+

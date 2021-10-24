@@ -75,6 +75,13 @@ typings/
 # FuseBox cache
 .fusebox/
 
+
+Front_End/.expo/
+
+Front_End/.expo/packager-info.json
+
+Front_End/package-lock.json
+
 # Python
 
 # Byte-compiled / optimized / DLL files
